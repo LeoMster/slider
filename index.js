@@ -1,6 +1,7 @@
 var slideModule = (function(){
     var index = 0;
     var timer;
+    var isMoving = false;
 
     function createSlide(obj){
         // 绘制 DOM
@@ -41,10 +42,14 @@ var slideModule = (function(){
 
         // 左右按钮切换banner
 		$('#left').on('click',function(){
-            slideMove('pre',navList,slider);
+            if(!isMoving){
+                slideMove('pre',navList,slider);
+            }
         });
         $('#right').on('click',function(){
-            slideMove('next',navList,slider);
+            if(!isMoving){
+                slideMove('next',navList,slider);
+            }
         });
 
         // 小圆点点击切换banner
@@ -72,6 +77,7 @@ var slideModule = (function(){
                 wrap.css('left','-1200px')
                 index = 1;
             }
+            isMoving = true;
             animateFun(direct,index,wrap);
             navMove(nav);
         }else if(direct === 'pre'){
@@ -79,6 +85,7 @@ var slideModule = (function(){
                 wrap.css('left','-6000px')
                 index = 4;
             }
+            isMoving = true;
             animateFun(direct,index,wrap);
             index--;
             navMove(nav);
@@ -89,7 +96,9 @@ var slideModule = (function(){
         if(d === 'next'){
             idx++;
         }
-        w.stop().animate({left:idx*-1200},500);
+        w.stop().animate({left:idx*-1200},500,function(){
+            isMoving = false;
+        });
     }
 
     function navMove(list){
